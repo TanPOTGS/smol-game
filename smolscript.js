@@ -4,7 +4,7 @@ let canW = 1500;
 let canH = 700;
 let charImg = new Image();
 let player;
-charImg.src = "images/ness3.png";
+charImg.src = "images/paul2.png";
 
 function initCanvas() {
     can = document.getElementById('game_canvas');
