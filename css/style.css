@@ -1,0 +1,12 @@
+body {
+    background-color: black;
+}
+#canvas_container {
+    background-color: darkorchid;
+    text-align: center;
+}
+#game_canvas {
+    background-color: rgb(11, 83, 11);
+    background-size: auto;
+    padding: 0px;
+}
