@@ -1,16 +1,18 @@
 let can;
 let ctx;
-let canW = 1500;
-let canH = 700;
+let canW = null;
+let canH = null;
 let charImg = new Image();
 let player;
 charImg.src = "images/paul2.png";
 
 function initCanvas() {
-    can = document.getElementById('game_canvas');
-    ctx = document.getElementById('game_canvas').getContext('2d');
-    window.addEventListener('keydown', controller.keyPressedOrReleased);
-    window.addEventListener('keyup', controller.keyPressedOrReleased);
+    can = document.getElementById('game_canvas');//stores the canvas element
+    ctx = document.getElementById('game_canvas').getContext('2d');//stores the context of the canvas element
+    canW = can.width;//stores the width of the canvas
+    canH = can.height;//stores the height of the canvas
+    window.addEventListener('keydown', controller.keyPressedOrReleased);//adds an event listener to the window, listens for 'keydown', calls controller.keyPressedOrReleased
+    window.addEventListener('keyup', controller.keyPressedOrReleased);//adds an event listener to the window, listens for 'keyup', calls controller.keyPressedOrReleased
 
     player = new Player();
     requestAnimationFrame(frameUpdate);
@@ -59,44 +61,37 @@ class Player {
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dUpIsActive) {
+        } else if(controller.dUpIsActive) {
             this.rowIndex = 1;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dLeftIsActive) {
+        } else if(controller.dLeftIsActive) {
             this.rowIndex = 2;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dRightIsActive) {
+        } else if(controller.dRightIsActive) {
             this.rowIndex = 3;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dDownIsActive && controller.dLeftIsActive) {
+        } else if(controller.dDownIsActive && controller.dLeftIsActive) {
             this.rowIndex = 4;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dRightIsActive && controller.dDownIsActive) {
+        } else if(controller.dRightIsActive && controller.dDownIsActive) {
             this.rowIndex = 5;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dLeftIsActive && controller.dUpIsActive) {
+        } else if(controller.dLeftIsActive && controller.dUpIsActive) {
             this.rowIndex = 6;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
             this.spriteYOrigin = this.spriteH * this.rowIndex;
-        }
-        if(controller.dUpIsActive && controller.dRightIsActive) {
+        } else if(controller.dUpIsActive && controller.dRightIsActive) {
             this.rowIndex = 7;
             this.columnIndex = spriteIndex;
             this.spriteXOrigin = this.spriteW * this.columnIndex;
