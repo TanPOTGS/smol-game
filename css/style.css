@@ -7,6 +7,5 @@ body {
 }
 #game_canvas {
     background-color: rgb(11, 83, 11);
-    background-size: auto;
-    padding: 0px;
+    margin: 20px auto;
 }
