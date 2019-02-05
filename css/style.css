@@ -1,11 +1,18 @@
 body {
-    background-color: black;
+    background-color: rgb(92, 51, 112);
 }
 #canvas_container {
-    background-color: darkorchid;
+    background-color: rgb(92, 51, 112);
     text-align: center;
 }
-#game_canvas {
-    background-color: rgb(11, 83, 11);
+#foreground_canvas {
     margin: 20px auto;
+    position: absolute;
+    border: 10px ridge #ffffff;
+    border-radius: 10px;
+}
+#background_canvas {
+    margin: 20px auto;
+    border: 10px ridge #ffffff;
+    border-radius: 10px;
 }

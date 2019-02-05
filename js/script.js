@@ -1,14 +1,23 @@
-let can, ctx, canW = null, canH = null, player, obj;
+/*Global vars and images*/
+let forecan, backcan, forectx, backctx, forecanW = null, backcanW = null, forecanH = null, backcanH = null, player, obj;
+
+let backgroundImg = new Image();
 let playerImg = new Image();
 let bigTreeNight = new Image();
+backgroundImg.src = "images/background.png";
 playerImg.src = "images/paul2.png";
-bigTreeNight.src = "images/big_tree_night.png"
+bigTreeNight.src = "images/big_tree_night.png";
 
 function initCanvas() {
-    can = document.getElementById('game_canvas'); //stores the canvas element
-    ctx = document.getElementById('game_canvas').getContext('2d'); //stores the context of the canvas element
-    canW = can.width; //stores the width of the canvas
-    canH = can.height; //stores the height of the canvas
+    forecan = document.getElementById('foreground_canvas'); //stores the  top canvas element
+    forectx = document.getElementById('foreground_canvas').getContext('2d'); //stores the context of the top canvas element
+    backcan = document.getElementById('background_canvas'); //stores the  back canvas element
+    backctx = document.getElementById('background_canvas').getContext('2d'); //stores the context of the back canvas element
+    
+    forecanW = forecan.width; //stores the width of the top canvas
+    forecanH = forecan.height; //stores the height of the top canvas
+    backcanW = backcan.width; //stores the width of the back canvas
+    backcanH = backcan.height; //stores the height of the back canvas
 
     window.addEventListener('keydown', controller.keyPressedOrReleased); //adds an event listener to the window, listens for 'keydown', calls controller.keyPressedOrReleased
     window.addEventListener('keyup', controller.keyPressedOrReleased); //adds an event listener to the window, listens for 'keyup', calls controller.keyPressedOrReleased
@@ -17,7 +26,12 @@ function initCanvas() {
     requestAnimationFrame(updateFrame);
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------Background----------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------------------------------------------
+
 function createAssets() {
+    background = new Background();
     player = new Player();
     obj = new GameAsset();
 }
@@ -26,7 +40,27 @@ function updateFrame() {
     controller.status();
     player.update();
     obj.update();
+    background.update();
     requestAnimationFrame(updateFrame); //updateFrame will be called every frame.
+}
+
+class Background {
+    constructor() {
+        this.xPos = 0;
+        this.yPos = 0;
+        this.width = backcanW;
+        this.height = backcanH;
+        this.imgOriginX = 1500;
+        this.imgOriginY = 700; 
+    }
+
+    render() {
+        backctx.drawImage(backgroundImg, this.imgOriginX, this.imgOriginY, this.width, this.height, this.xPos, this.yPos, this.width, this.height);
+    }
+
+    update() {
+        this.render();
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -56,18 +90,7 @@ class GameAsset {
     get centerY() {return this.yPos + (this.height / 2)};
 
     render() {
-        /*if (this.isbeingTouched) {
-            this.color = "blue";
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-        } else {
-            this.color = "rgba(0, 0, 0, 0.5)";
-            ctx.fillStyle = this.color;
-            ctx.fillRect(this.xPos, this.yPos, this.width, this.height);
-        }*/
-
-        ctx.drawImage(bigTreeNight, this.spriteOriginX, this.spriteOriginY, this.spriteW, this.spriteH, this.bigTreeNightOriginX, this.bigTreeNightOriginY, this.spriteW, this.spriteH);
-        
+        forectx.drawImage(bigTreeNight, this.spriteOriginX, this.spriteOriginY, this.spriteW, this.spriteH, this.bigTreeNightOriginX, this.bigTreeNightOriginY, this.spriteW, this.spriteH);
     }
 
     collisionDetection() {
@@ -86,8 +109,8 @@ class GameAsset {
 
 class Player {
     constructor() {
-        this.xPos = canW / 2; //player position on the canvas, also where the players starts the game
-        this.yPos = canH / 2; //player position on the canvas, also where the players starts the game
+        this.xPos = forecanW / 2; //player position on the top canvas, also where the players starts the game
+        this.yPos = forecanH / 2; //player position on the top canvas, also where the players starts the game
         this.spriteSheetW = playerImg.width; //the width of my player's full sprite sheet
         this.spriteSheetH = playerImg.height; //the height of my player's full sprite sheet
         this.spritesPerRow = 2;
@@ -101,7 +124,7 @@ class Player {
         this.spriteOriginY = this.individualSpriteH * this.rowIndex; //the origin of each sprite in a column
         this.isMoving = false; //the player starts the game not moving
         this.isMovingDiagonally = false; //the player starts the game not moving in a diagonal 
-        this.movementSpeed; //defined in controller.status, how quickly the player moves across the canvas
+        this.movementSpeed; //defined in controller.status, how quickly the player moves across the top canvas
         this.animationCounter = 0; //in the player.update method, determines how quickly the animation switches between each image in the sprite set
         this.isColliding = false; //if the player is touching another object or not
         this.topCollide = false;
@@ -119,10 +142,10 @@ class Player {
 
     render() {
         this.animate();
-        ctx.save();
-        ctx.clearRect(0, 0, canW, canH);
-        ctx.drawImage(playerImg, this.spriteOriginX, this.spriteOriginY, this.individualSpriteW, this.individualSpriteH, this.xPos, this.yPos, this.individualSpriteW, this.individualSpriteH); //(image, imgOriginX, imgOriginY, howMuchWidthToShow, howMuchHeightToShow, whereToDisplayOnCanvasX, whereToDisplayOnCanvasX, imageStretchW, imageStretchH)
-        ctx.restore();
+        forectx.save();
+        forectx.clearRect(0, 0, forecanW, forecanH);
+        forectx.drawImage(playerImg, this.spriteOriginX, this.spriteOriginY, this.individualSpriteW, this.individualSpriteH, this.xPos, this.yPos, this.individualSpriteW, this.individualSpriteH); //(image, imgOriginX, imgOriginY, howMuchWidthToShow, howMuchHeightToShow, whereToDisplayOnTopCanvasX, whereToDisplayOnTopCanvasX, imageStretchW, imageStretchH)
+        forectx.restore();
     }
 
     animate() {
@@ -249,6 +272,7 @@ let controller = {
     dUpIsActive: false,
     dDownIsActive: false,
     runIsActive: false,
+
     keyPressedOrReleased: function(event) {
         let keyStatus;
 
