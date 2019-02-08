@@ -6,11 +6,13 @@ let playerImg = new Image();
 let bigTreeNightImg = new Image();
 let bigTreeNightTopImg = new Image();
 let bigTreeNightBottomImg = new Image();
+let appleImg = new Image();
 backgroundImg.src = "images/background.png";
 playerImg.src = "images/paul.png";
 bigTreeNightImg.src = "images/big_tree_night.png";
 bigTreeNightTopImg.src = "images/big_tree_night_top.png";
-bigTreeNightBottomImg.src = "images/big_tree_night_bottom.png"
+bigTreeNightBottomImg.src = "images/big_tree_night_bottom.png";
+appleImg.src = "images/apple.png"
 
 let trees = [];
 
@@ -39,10 +41,11 @@ function initCanvas() {
 function createAssets() {
     background = new Background();
     player = new Player();
-    trees[0] = new Obj(100, 100);
-    trees[1] = new Obj(850, 100);
-    trees[2] = new Obj(350, 400);
-    trees[3] = new Obj(300, 100);
+    trees[0] = new Obj(100, 100, false);
+    trees[1] = new Obj(850, 100, true);
+    trees[2] = new Obj(350, 400, false);
+    trees[3] = new Obj(300, 100, false);
+    trees[4] = new Obj(1100, 350, false);
 }
 
 function updateFrame() {
@@ -53,6 +56,7 @@ function updateFrame() {
     trees[1].update();
     trees[2].update();
     trees[3].update();
+    trees[4].update();
     requestAnimationFrame(updateFrame); //updateFrame will be called every frame.
 }
 
@@ -83,7 +87,7 @@ class Background {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 class Obj {
-    constructor(mapX, mapY) {
+    constructor(mapX, mapY, apple) {
         this.bigTreeNightOriginX = mapX;
         this.bigTreeNightOriginY = mapY;
         this.spritesW = bigTreeNightTopImg.width;
@@ -96,6 +100,10 @@ class Obj {
         this.spriteOriginX = 0;
         this.spriteOriginY = 0;
         this.isColliding = false;
+        this.hasApple = apple;
+        this.appleW = appleImg.width;
+        this.appleH = appleImg.height;
+        this.alpha = 0;
     }
 
     get topSide() {return this.hitBoxYPos};
@@ -107,6 +115,11 @@ class Obj {
 
     render() {
         forectx.drawImage(bigTreeNightTopImg, this.spriteOriginX, this.spriteOriginY, this.spritesW, this.topSpriteH, this.bigTreeNightOriginX, this.bigTreeNightOriginY, this.spritesW, this.topSpriteH);
+        if (this.hasApple) {
+            forectx.globalAlpha = this.alpha;
+            forectx.drawImage(appleImg, this.spriteOriginX, this.spriteOriginY, this.appleW, this.appleH, this.bigTreeNightOriginX + 100, this.bigTreeNightOriginY + 70, this.appleW, this.appleH);
+            forectx.globalAlpha = 1;
+        }
         midctx.drawImage(bigTreeNightBottomImg, this.spriteOriginX, this.spriteOriginY, this.spritesW, this.bottomSpriteH, this.bigTreeNightOriginX, this.bigTreeNightOriginY + this.topSpriteH, this.spritesW, this.bottomSpriteH);
         //forectx.strokeStyle = "black";
         //forectx.strokeRect(this.hitBoxXPos, this.hitBoxYPos, this.hitBoxW, this.hitBoxH);
@@ -140,6 +153,13 @@ class Obj {
                 } else {
                     player.hitBoxYPos = this.hitBoxYPos - player.hitBoxH;
                 }
+            }
+        }
+    }
+    showApple() {
+        if (this.isColliding) {
+            if (this.hasApple) {
+                this.alpha = 1;
             }
         }
     }
@@ -297,10 +317,13 @@ let controller = {
             controller.dUpIsActive = keyStatus;
             break;
             case 40:
-            controller.dDownIsActive = keyStatus
+            controller.dDownIsActive = keyStatus;
+            break;
+            case 68:
+            controller.actionIsActive = keyStatus;
             break;
             case 70:
-            controller.runIsActive = keyStatus
+            controller.runIsActive = keyStatus;
             break;
         }
     },
@@ -318,6 +341,12 @@ let controller = {
         }
         if (controller.dDownIsActive) {
             player.moveDown();
+        }
+
+        if (controller.actionIsActive) {
+            for (let i = 0; i < trees.length; i++) {
+                trees[i].showApple();
+            }
         }
 
         (controller.runIsActive) ? (player.movementSpeed = 5, player.animationCounter += 0.15) : player.movementSpeed = 3;
