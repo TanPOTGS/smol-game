@@ -342,7 +342,6 @@ let controller = {
         if (controller.dDownIsActive) {
             player.moveDown();
         }
-
         if (controller.actionIsActive) {
             for (let i = 0; i < trees.length; i++) {
                 trees[i].showApple();
