@@ -11,6 +11,12 @@ body {
     border: 10px ridge #ffffff;
     border-radius: 10px;
 }
+#midground_canvas {
+    margin: 20px auto;
+    position: absolute;
+    border: 10px ridge #ffffff;
+    border-radius: 10px;
+}
 #background_canvas {
     margin: 20px auto;
     border: 10px ridge #ffffff;
